@@ -1,0 +1,38 @@
+{
+  "name": "chase-buckets",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A simple ui that enables you to group transactions for chase statements",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R nyan --recursive ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/landau/chase-buckets.git"
+  },
+  "author": "Trevor Landau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/landau/chase-buckets/issues"
+  },
+  "homepage": "https://github.com/landau/chase-buckets",
+  "dependencies": {
+    "fluxxor": "^1.5.2",
+    "lodash": "^3.3.0",
+    "predicate": "^0.11.0",
+    "react": "^0.12.2"
+  },
+  "devDependencies": {
+    "babel": "^4.4.3",
+    "babelify": "^5.0.3",
+    "browserify": "^9.0.3",
+    "jshint": "^2.6.0",
+    "jsxhint": "^0.12.0",
+    "mocha": "^2.1.0",
+    "must": "^0.12.0",
+    "node-jsx": "^0.12.4",
+    "react-tools": "^0.12.2",
+    "watchify": "^2.4.0"
+  }
+}
