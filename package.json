@@ -31,8 +31,7 @@
     "fluxxor": "^1.5.2",
     "lodash": "^3.3.0",
     "predicate": "^0.11.0",
-    "react": "^0.12.2",
-    "react-bootstrap": "^0.15.1"
+    "react": "^0.12.2"
   },
   "devDependencies": {
     "babel": "^4.4.3",
