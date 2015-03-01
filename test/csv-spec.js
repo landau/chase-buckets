@@ -11,14 +11,14 @@ describe('csv', ()=> {
         type: 'Sale',
         trans_date: '02/19/2015',
         post_date: '02/20/2015',
-        description: 'ABC*The Fitness Edge',
+        description: 'test data',
         amount: '-26.58'
       },
       {
         type: 'Sale',
         trans_date: '02/19/2015',
         post_date: '02/20/2015',
-        description: 'PILOT',
+        description: 'more tests',
         amount: '-32.12'
       }
     ];
