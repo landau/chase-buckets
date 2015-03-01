@@ -27,6 +27,9 @@ module.exports = createClass({
 
   onAdd(e) {
     e.preventDefault();
+    this.setState({
+      text: ''
+    });
     this.props.onAddBucket(this.state.text);
   },
 
@@ -38,9 +41,9 @@ module.exports = createClass({
     });
   },
 
-  onSelect(e) {
+  onSelect(name) {
     this.setState({
-      active: e.target.value
+      active: name
     });
   },
 
@@ -48,14 +51,15 @@ module.exports = createClass({
     return (
       <form>
          <div className="form-group">
-          <input type="text" className="form-control" placeholder="Type Bucket Name" onChange={this.onChange} />
+          <input type="text" className="form-control" placeholder="Type Bucket Name"
+            value={this.state.text} onChange={this.onChange} />
          </div>
          <div className="form-group">
            <button type="submit" className="btn btn-sm btn-primary" onClick={this.onAdd}>Add</button>
            <button type="button" className="btn btn-sm btn-secondary" onClick={this.onDel}>Delete</button>
          </div>
          <div className="form-group">
-           <select multiple className="form-control">
+           <select multiple className="form-control" size={Object.keys(this.props.buckets).length}>
              {_.map(this.props.buckets, this.renderOption)}
            </select>
          </div>
@@ -65,6 +69,7 @@ module.exports = createClass({
 
   renderOption(bucket) {
     var isActive = this.state.active === bucket.name;
-    return <option key={bucket.name} defaultValue={isActive} onClick={this.onSelect}>{bucket.name}</option>
+    var str = `${bucket.name} - ${'$' + bucket.getTotal()}`;
+    return <option key={bucket.name} defaultValue={isActive} onClick={this.onSelect.bind(this, bucket.name)}>{str}</option>
   }
 });

@@ -40,13 +40,14 @@ exports.App = createClass({
       <div>
         <div className="row">
           <div className="col-md-12">
-            <label>Insert CSV</label>
-            <CsvForm onChange={this.onTextAreaChange} />
           </div>
         </div>
         <br />
         <div className="row">
           <div className="col-md-3">
+            <h4>Insert CSV</h4>
+            <CsvForm onChange={this.onTextAreaChange} />
+            <hr/>
             <BucketList buckets={buckets} onAddBucket={this.onAddBucket} onDeleteBucket={this.onDeleteBucket} />
           </div>
           <div className="col-md-9">
