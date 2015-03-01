@@ -8,7 +8,8 @@
     "pretest": "jsxhint index.js ./lib ./test",
     "test": "mocha --compilers js:babel/register -R spec --recursive ./test",
     "watch": "watchify index.js -d -o public/js/bundle.js -v",
-    "build": "browserify index.js --debug -o public/js/bundle.js"
+    "build": "browserify index.js --debug -o public/js/bundle.js",
+    "output": "cat ./build/top.html > ./build/index.html && cat ./public/js/bundle.js >> ./build/index.html && cat ./build/bottom.html >> ./build/index.html"
   },
   "browserify": {
     "transform": [
@@ -42,7 +43,6 @@
     "mocha": "^2.1.0",
     "must": "^0.12.0",
     "node-jsx": "^0.12.4",
-    "react-tools": "^0.12.2",
     "sinon": "^1.12.2",
     "watchify": "^2.4.0"
   }
