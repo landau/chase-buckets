@@ -34,7 +34,7 @@ exports.App = createClass({
   },
 
   render() {
-    var bucketNames = this.state.buckets.getNames().filter(pred.not.equal('unknown'));
+    var buckets = this.state.buckets.filter((b, name)=> name !== 'unknown');
     
     return (
       <div>
@@ -47,8 +47,7 @@ exports.App = createClass({
         <br />
         <div className="row">
           <div className="col-md-3">
-            <BucketList buckets={bucketNames}
-               onAddBucket={this.onAddBucket} onDeleteBucket={this.onDeleteBucket} />
+            <BucketList buckets={buckets} onAddBucket={this.onAddBucket} onDeleteBucket={this.onDeleteBucket} />
           </div>
           <div className="col-md-9">
             {_.map(this.state.buckets.buckets, this.renderTable, this)}
@@ -64,9 +63,9 @@ exports.App = createClass({
     if (!bucket.entries.length) return null;
     
     return (
-      <div>
+      <div key={bucket.name}>
         <h3>{bucket.name}</h3>
-        <Table key={bucket.name} bucket={bucket} buckets={bucketNames} onChangeBucket={this.onChangeBucket} />
+        <Table bucket={bucket} buckets={bucketNames} onChangeBucket={this.onChangeBucket} />
       </div>
     );
   }

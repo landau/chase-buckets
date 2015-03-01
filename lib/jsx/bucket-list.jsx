@@ -1,12 +1,12 @@
 'use strict';
 
 var {createClass, PropTypes} = require('react');
+var _ = require('lodash');
 
 module.exports = createClass({
   displayName: 'bucket-list',
 
   propTypes: {
-    buckets: PropTypes.arrayOf(PropTypes.string).isRequired,
     onAddBucket: PropTypes.func.isRequired,
     onDeleteBucket: PropTypes.func.isRequired
   },
@@ -56,15 +56,15 @@ module.exports = createClass({
          </div>
          <div className="form-group">
            <select multiple className="form-control">
-             {this.props.buckets.map(this.renderOption)}
+             {_.map(this.props.buckets, this.renderOption)}
            </select>
          </div>
       </form>
     );
   },
 
-  renderOption(bucketName) {
-    var isActive = this.state.active === bucketName;
-    return <option key={bucketName} defaultValue={isActive} onClick={this.onSelect}>{bucketName}</option>
+  renderOption(bucket) {
+    var isActive = this.state.active === bucket.name;
+    return <option key={bucket.name} defaultValue={isActive} onClick={this.onSelect}>{bucket.name}</option>
   }
 });
