@@ -60,9 +60,14 @@ exports.App = createClass({
 
   renderTable(bucket) {
     var bucketNames = this.state.buckets.getNames();
+
+    if (!bucket.entries.length) return null;
     
     return (
-      <Table key={bucket.name} bucket={bucket} buckets={bucketNames} onChangeBucket={this.onChangeBucket} />
+      <div>
+        <h3>{bucket.name}</h3>
+        <Table key={bucket.name} bucket={bucket} buckets={bucketNames} onChangeBucket={this.onChangeBucket} />
+      </div>
     );
   }
 });
