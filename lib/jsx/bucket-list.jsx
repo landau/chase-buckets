@@ -69,7 +69,9 @@ module.exports = createClass({
 
   renderOption(bucket) {
     var isActive = this.state.active === bucket.name;
-    var str = `${bucket.name} - ${'$' + bucket.getTotal()}`;
+    var total = bucket.getTotal();
+    total = total > 0 ? '-' + total : Math.abs(total);
+    var str = `${bucket.name} - ${'$' + total}`;
     return <option key={bucket.name} defaultValue={isActive} onClick={this.onSelect.bind(this, bucket.name)}>{str}</option>
   }
 });
