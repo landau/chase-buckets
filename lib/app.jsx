@@ -7,6 +7,8 @@ FluxMixin = FluxMixin(React);
 var CsvForm = require('./jsx/csv.jsx');
 var BucketList = require('./jsx/bucket-list.jsx');
 var Table = require('./jsx/table.jsx');
+var _ = require('lodash');
+var pred = require('predicate');
 
 exports.App = createClass({
   mixins: [FluxMixin, StoreWatchMixin('Store')],
@@ -27,7 +29,13 @@ exports.App = createClass({
     this.getFlux().actions.delBucket(name);
   },
 
+  onChangeBucket(bucketName, entry) {
+    this.getFlux().actions.addEntryToBucket(bucketName, entry);
+  },
+
   render() {
+    var bucketNames = this.state.buckets.getNames().filter(pred.not.equal('unknown'));
+    
     return (
       <div>
         <div className="row">
@@ -39,12 +47,22 @@ exports.App = createClass({
         <br />
         <div className="row">
           <div className="col-md-3">
-            <BucketList buckets={Object.keys(this.state.buckets)}
+            <BucketList buckets={bucketNames}
                onAddBucket={this.onAddBucket} onDeleteBucket={this.onDeleteBucket} />
           </div>
-          <div className="col-md-9"><Table data={this.state.data} /></div>
+          <div className="col-md-9">
+            {_.map(this.state.buckets.buckets, this.renderTable, this)}
+          </div>
         </div>
       </div>
     );
   },
+
+  renderTable(bucket) {
+    var bucketNames = this.state.buckets.getNames();
+    
+    return (
+      <Table key={bucket.name} bucket={bucket} buckets={bucketNames} onChangeBucket={this.onChangeBucket} />
+    );
+  }
 });

@@ -27,10 +27,45 @@ describe('Bucket', ()=> {
   });
 
   describe('#push', ()=> {
+    var entry;
+    beforeEach(()=> {
+      entry = { description: 'foo' };
+      bucket = new Bucket();
+      bucket.push(entry);
+    });
+
     it('adds an entry to the array', ()=> {
-      var v = 'foo';
-      bucket.push(v);
-      bucket.entries[0].must.equal(v);
+      bucket.entries[0].must.equal(entry);
+    });
+
+    it('adds an entry key', ()=> {
+      bucket.keys[0].must.equal(entry.description);
+    });
+  });
+
+  describe('#pop', ()=> {
+    var entry;
+    beforeEach(()=> {
+      entry = { description: 'foo' };
+      bucket = new Bucket();
+      bucket.push(entry);
+      bucket.pop(entry);
+    });
+
+    it('removes the entry from the entries array', ()=> {
+      bucket.entries.every(e => {
+        return e.description !== entry.description;
+      }).must.be.true();
+    });
+
+    it('removes the key from the keys array', ()=> {
+      bucket.keys.every(key => key !== entry.description).must.be.true();
+    });
+  });
+
+  describe('#toJSON', ()=> {
+    it('returns true if the entry', ()=> {
+      bucket.toJSON().must.equal(keys);
     });
   });
 
@@ -41,7 +76,7 @@ describe('Bucket', ()=> {
   });
 });
 
-describe.only('Buckets', ()=> {
+describe('Buckets', ()=> {
   var buckets, storage;
 
   beforeEach(()=> {
@@ -170,11 +205,91 @@ describe.only('Buckets', ()=> {
   });
 
   describe('#getNames', ()=> {
-    it('removes a bucket from buckets', ()=> {
+    it('returns the names of all the buckets', ()=> {
       buckets.buckets.foo = 'hi';
       buckets.buckets.bar = 'hi';
       var keys = buckets.getNames();
-      keys.must.eql(['foo', 'bar']);
+      keys.must.eql(['unknown', 'foo', 'bar']);
+    });
+  });
+
+  describe('#addEntryToBucket', ()=> {
+    var has, pop, push, save;
+    var entry = { description: 'PILOT' };
+
+    beforeEach(()=> {
+      buckets.add('foo').add('bar');
+      buckets.buckets.foo.push(entry); // cheat this one in
+
+      save = sinon.stub(buckets, 'save');
+      pop = sinon.spy(Bucket.prototype, 'pop');
+      push = sinon.spy(Bucket.prototype, 'push');
+    });
+
+    afterEach(()=> {
+      pop.restore();
+      push.restore();
+    });
+
+    it('removes an entry from a bucket that should no longer own it', ()=> {
+      buckets.addEntryToBucket('bar', entry);
+      pop.calledWithExactly(entry).must.be.true();
+    });
+
+    it('pushes an entry to a given bucket', ()=> {
+      buckets.addEntryToBucket('bar', entry);
+      push.calledOnce.must.be.true();
+      push.calledWithExactly(entry).must.be.true();
+    });
+
+    it('calls save', ()=> {
+      buckets.addEntryToBucket('bar', entry);
+    });
+  });
+
+  describe('#removeEntryFromBucket', ()=> {
+    var entry = { description: 'PILOT' };
+    var pop, save, bucket;
+
+    beforeEach(()=> {
+      buckets.add('foo');
+      bucket = buckets.buckets.foo;
+      buckets.addEntryToBucket('foo', entry);
+
+      save = sinon.stub(buckets, 'save');
+      pop = sinon.spy(bucket, 'pop');
+      buckets.removeEntryFromBucket('foo', entry);
+    });
+
+    it('calls pop on a given bucket bucket', ()=> {
+      pop.calledOnce.must.be.true();
+      pop.calledWithExactly(entry).must.be.true();
+    });
+
+    it('calls #save', ()=> {
+      save.calledOnce.must.be.true();
+    });
+  });
+
+  describe('#addEntry', ()=> {
+    var entry = { description: 'PILOT' };
+    var addEntryToBucket;
+
+    beforeEach(()=> {
+      buckets.add('foo');
+      buckets.addEntryToBucket('foo', entry);
+      addEntryToBucket = sinon.stub(buckets, 'addEntryToBucket');
+    });
+
+    it('calls #addEntryToBucket on a found bucket', ()=> {
+      buckets.addEntry(entry);
+      addEntryToBucket.calledWithExactly('foo', entry);
+    });
+
+    it('calls #addEntryToBucket on a the unknown bucket', ()=> {
+      var entry = { description: 'bar' };
+      buckets.addEntry(entry);
+      addEntryToBucket.calledWithExactly('unknown', entry);
     });
   });
 });

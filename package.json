@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "jsxhint index.js ./lib ./test",
-    "test": "mocha --compilers js:babel/register -R nyan --recursive ./test",
+    "test": "mocha --compilers js:babel/register -R spec --recursive ./test",
     "watch": "watchify index.js -d -o public/js/bundle.js -v",
     "build": "browserify index.js --debug -o public/js/bundle.js"
   },
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/landau/chase-buckets",
   "dependencies": {
+    "bluebird": "^2.9.12",
     "csv": "^0.4.1",
     "fluxxor": "^1.5.2",
     "lodash": "^3.3.0",
