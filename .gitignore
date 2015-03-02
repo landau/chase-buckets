@@ -29,3 +29,4 @@ node_modules
 bundle.js
 data.csv
 build/index.html
+public/js/bundle.js
