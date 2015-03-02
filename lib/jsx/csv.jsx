@@ -11,10 +11,10 @@ module.exports = require('react').createClass({
   
   onChange(e) {
     var {value} = e.target;
-    this.props.onChange(value);
     this.setState({
       text: value
     });
+    this.props.onChange(value);
   },
 
   render() {

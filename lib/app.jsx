@@ -18,10 +18,12 @@ exports.App = createClass({
   },
 
   onCCChange(csv) {
+    if (!csv.length) return;
     this.getFlux().actions.addCsv(csv, 'cc');
   },
 
   onAccountChange(csv) {
+    if (!csv.length) return;
     this.getFlux().actions.addCsv(csv, 'account');
   },
 
