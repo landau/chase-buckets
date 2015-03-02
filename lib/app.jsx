@@ -17,8 +17,12 @@ exports.App = createClass({
     return this.getFlux().store('Store').getState();
   },
 
-  onTextAreaChange(csv) {
-    this.getFlux().actions.addCsv(csv);
+  onCCChange(csv) {
+    this.getFlux().actions.addCsv(csv, 'cc');
+  },
+
+  onAccountChange(csv) {
+    this.getFlux().actions.addCsv(csv, 'account');
   },
 
   onAddBucket(name) {
@@ -45,8 +49,11 @@ exports.App = createClass({
         <br />
         <div className="row">
           <div className="col-md-3">
-            <h4>Insert CSV</h4>
-            <CsvForm onChange={this.onTextAreaChange} />
+            <h4>Insert Credit Card CSV</h4>
+            <CsvForm onChange={this.onCCChange} />
+            <hr/>
+            <h4>Insert Account CSV</h4>
+            <CsvForm onChange={this.onAccountChange} />
             <hr/>
             <BucketList buckets={buckets} onAddBucket={this.onAddBucket} onDeleteBucket={this.onDeleteBucket} />
           </div>
