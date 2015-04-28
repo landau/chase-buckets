@@ -5,10 +5,11 @@
   "description": "A simple ui that enables you to group transactions for chase statements",
   "main": "index.js",
   "scripts": {
-    "pretest": "jsxhint index.js ./lib ./test",
-    "test": "mocha --compilers js:babel/register -R spec --recursive ./test",
+    "pretest": "jsxhint index.js ./lib ./test ./public/js",
+    "test": "mocha -R spec --recursive ./test && npm test-fe",
+    "test-fe": "mocha --compilers js:babel/register -R spec --recursive ./public/js/test",
     "watch": "watchify index.js -d -o public/js/bundle.js -v",
-    "build": "browserify index.js --debug -o public/js/bundle.js",
+    "build": "browserify public/js/index.js --debug -o public/js/bundle.js",
     "output": "cat ./build/top.html > ./build/index.html && cat ./public/js/bundle.js >> ./build/index.html && cat ./build/bottom.html >> ./build/index.html"
   },
   "browserify": {
@@ -30,7 +31,9 @@
     "bluebird": "^2.9.12",
     "csv": "^0.4.1",
     "fluxxor": "^1.5.2",
+    "hapi": "^8.4.0",
     "lodash": "^3.3.0",
+    "mongojs": "^0.18.2",
     "predicate": "^0.11.0",
     "react": "^0.12.2"
   },
