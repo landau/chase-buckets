@@ -11,8 +11,9 @@ var _ = require('lodash');
 var pred = require('predicate');
 
 exports.App = createClass({
+  displayName: 'app',
   mixins: [FluxMixin, StoreWatchMixin('Store')],
-  
+
   getStateFromFlux(){
     return this.getFlux().store('Store').getState();
   },
@@ -41,7 +42,7 @@ exports.App = createClass({
 
   render() {
     var buckets = this.state.buckets.filter((b, name)=> name !== 'unknown');
-    
+
     return (
       <div>
         <div className="row">
@@ -71,7 +72,7 @@ exports.App = createClass({
     var bucketNames = this.state.buckets.getNames();
 
     if (!bucket.entries.length) return null;
-    
+
     return (
       <div key={bucket.name}>
         <h3>{bucket.name}</h3>
