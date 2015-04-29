@@ -9,6 +9,7 @@ var hapi = require('hapi');
 var server = new hapi.Server();
 var env = process.env;
 var PORT = env.NODE_PORT || 1337;
+var NODE_ENV = env.NODE_ENV;
 
 var mongojs = require('mongojs');
 var db = mongojs('localhost/chase');
@@ -22,27 +23,30 @@ server.connection({
 server.views({
   path: path.join(__dirname, 'lib', 'views'),
   engines: {
-    jsx: require('hapi-react')({ beautify: true })
+    jsx: require('hapi-react')({
+      beautify: true
+    })
   }
 });
 
-server.route({
-  method: 'GET',
-  path: ['', 'public', '{path*}'].join('/'),
-  handler: {
-    directory: {
-      path: path.join(__dirname, 'public'),
-      listing: true,
-      index: true
+if (NODE_ENV !== 'production') {
+  server.route({
+    method: 'GET',
+    path: ['', 'public', '{path*}'].join('/'),
+    handler: {
+      directory: {
+        path: path.join(__dirname, 'public'),
+        listing: true,
+        index: true
+      }
     }
-  }
-});
+  });
+}
 
 server.route({
   method: 'GET',
   path: '/',
   handler: function(request, reply) {
-    // TODO insert user/pass in via env vars
     reply.view('index', {
       user: env.NODE_USER,
       password: env.NODE_PASS
