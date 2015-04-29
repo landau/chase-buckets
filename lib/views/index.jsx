@@ -4,8 +4,6 @@ var React = require('react');
 
 module.exports = React.createClass({
   render: function() {
-    var script = 'window.USER = "' + this.props.user + '"; window.PASSWORD = "' + this.props.password + '";';
-
     return (
       <html lang="en">
         <head>
@@ -17,7 +15,6 @@ module.exports = React.createClass({
         </head>
         <body>
           <div className="container" id="app"></div>
-          <script dangerouslySetInnerHTML={{__html: script }}></script>
           <script src="/public/js/bundle.js"></script>
         </body>
       </html>

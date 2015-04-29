@@ -47,10 +47,7 @@ server.route({
   method: 'GET',
   path: '/',
   handler: function(request, reply) {
-    reply.view('index', {
-      user: env.NODE_USER,
-      password: env.NODE_PASS
-    });
+    reply.view('index');
   }
 });
 
