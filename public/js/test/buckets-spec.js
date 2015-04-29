@@ -95,7 +95,20 @@ describe('Buckets', ()=> {
       load.restore();
     });
 
-    it('sets a `buckets` obj', ()=> {
+    it('sets a `buckets` obj and adds an unknown bucket', ()=> {
+      var x  = {};
+      buckets = new Buckets(storage, x);
+      buckets.buckets.must.equal(x);
+      x.unknown.must.exist();
+    });
+
+    it('doesn\'t set a the unknown bucket `buckets` if it already exists', ()=> {
+      var x  = { unknown: 1 };
+      buckets = new Buckets(storage, x);
+      x.unknown.must.equal(x.unknown);
+    });
+
+    it('sets a `buckets` obj if not provided', ()=> {
       buckets.buckets.must.be.an.object();
     });
 
@@ -113,15 +126,26 @@ describe('Buckets', ()=> {
   });
 
   describe('#save', ()=> {
+    var save;
     beforeEach(()=> {
       var bucket = new Bucket('foo', [1, 2]);
+      save = sinon.stub(buckets, 'emit');
       buckets.buckets = {};
       buckets.buckets.foo = bucket;
       buckets.save();
     });
 
+    afterEach(()=> {
+      save.restore();
+    });
+
     it('storage.buckets should be a string', ()=> {
       buckets.storage.buckets.must.be.a.string();
+    });
+
+    it('calls #emit', ()=> {
+      save.calledOnce.must.be.true();
+      save.calledWithExactly('save', buckets).must.be.true();
     });
   });
 

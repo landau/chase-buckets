@@ -56,9 +56,12 @@ class Bucket {
   }
 }
 
-class Buckets {
-  constructor(storage) {
-    this.buckets = { unknown: new Bucket('unknown') };
+class Buckets extends require('events').EventEmitter {
+  constructor(storage, buckets) {
+    super();
+    this.shouldEmit = true;
+    this.buckets = buckets;
+    buckets.unknown = new Bucket('unknown');
 
     if (!storage.buckets) {
       storage.buckets = JSON.stringify(this.buckets);
@@ -70,6 +73,11 @@ class Buckets {
 
   save() {
     this.storage.buckets = JSON.stringify(this.buckets);
+    if (this.shouldEmit) {
+      this.emit('save', this);
+    } else {
+      console.log('emitting disabled');
+    }
   }
 
   load() {
@@ -143,6 +151,10 @@ class Buckets {
   clean() {
     _.each(this.buckets, b => b.clean());
     return this;
+  }
+
+  toJSON() {
+    return JSON.stringify(this.buckets);
   }
 }
 

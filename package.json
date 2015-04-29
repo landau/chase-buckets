@@ -6,11 +6,12 @@
   "main": "index.js",
   "scripts": {
     "pretest": "jsxhint index.js ./lib ./test ./public/js",
-    "test": "mocha -R spec --recursive ./test && npm test-fe",
+    "test": "npm run test-fe",
     "test-fe": "mocha --compilers js:babel/register -R spec --recursive ./public/js/test",
-    "watch": "watchify index.js -d -o public/js/bundle.js -v",
+    "watch": "watchify public/js/index.js -d -o public/js/bundle.js -v",
     "build": "browserify public/js/index.js --debug -o public/js/bundle.js",
-    "output": "cat ./build/top.html > ./build/index.html && cat ./public/js/bundle.js >> ./build/index.html && cat ./build/bottom.html >> ./build/index.html"
+    "output": "cat ./build/top.html > ./build/index.html && cat ./public/js/bundle.js >> ./build/index.html && cat ./build/bottom.html >> ./build/index.html",
+    "start": "node ."
   },
   "browserify": {
     "transform": [
@@ -36,7 +37,8 @@
     "lodash": "^3.3.0",
     "mongojs": "^0.18.2",
     "predicate": "^0.12.0",
-    "react": "^0.13.2"
+    "react": "^0.13.2",
+    "superagent": "^1.2.0"
   },
   "devDependencies": {
     "babel": "^5.1.13",

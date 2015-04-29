@@ -1,5 +1,6 @@
 'use strict';
 
+var request = require('superagent');
 var pred = require('predicate');
 var parseCsv = require('./csv');
 var {createStore} = require('fluxxor');
@@ -30,7 +31,7 @@ var CSV = {
 
 /* Store */
 var Store = createStore({
-  initialize() {
+  initialize(opts) {
     this.bindActions(
       BUCKET.ADD, this.onAddBucket,
       BUCKET.DEL, this.onDeleteBucket,
@@ -38,9 +39,24 @@ var Store = createStore({
       CSV.ADD, this.onAddCsv
     );
 
-    this.buckets = new Buckets(localStorage);
     this.accountData = [];
     this.ccData = [];
+
+    window.buckets = this.buckets = new Buckets(localStorage, opts.buckets);
+    this.buckets.on('save', buckets => {
+      console.log(JSON.stringify(buckets), buckets);
+      request.post('/buckets')
+        .auth(window.USER, window.PASSWORD)
+        .type('text/plain')
+        .send(JSON.stringify(buckets))
+        .end((err, res)=> {
+          if (err) {
+            throw err;
+          }
+
+          console.log('Saved...');
+        });
+    });
   },
 
   getState() {
@@ -66,11 +82,14 @@ var Store = createStore({
     window[slot] = this[slot] = parseCsv.fromAccount(csv);
 
     this.buckets.clean();
-    
+
+    // Don't emit for addEntry. Unnecessary POST requests
+    this.buckets.shouldEmit = false;
     this.ccData
       .concat(this.accountData)
       .filter(entry => ['Payment', 'Pending'].every(pred.not.equal(entry.type)))
       .forEach(entry => this.buckets.addEntry(entry), this);
+    this.buckets.shouldEmit = true;
     this.emit('change');
   },
 
@@ -81,7 +100,7 @@ var Store = createStore({
 });
 
 /* actions */
-var actions = {
+var actions = exports.actions = {
   addBucket(bucketName) {
     this.dispatch(BUCKET.ADD, bucketName);
   },
@@ -98,8 +117,5 @@ var actions = {
 
 var {Flux} = require('fluxxor');
 
-var stores = {
-  Store: new Store()
-};
-
-exports.flux = new Flux(stores, actions);
+exports.Store = Store;
+exports.Flux = Flux;
