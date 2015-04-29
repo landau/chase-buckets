@@ -110,7 +110,7 @@ server.start(function(err) {
 
     buckets.insert({
       id: ID,
-      buckets: {}
+      buckets: '{}'
     }, function(err) {
       assert.ifError(err);
       return console.log('Server started on http://localhost:' + PORT);
