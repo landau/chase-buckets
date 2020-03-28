@@ -10,6 +10,8 @@ branches:
 
 before_install:
   - gem install bundler
+
+script: rspec
 # jobs:
 #   include:
 #     # Define the release stage that runs semantic-release
