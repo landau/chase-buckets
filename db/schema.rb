@@ -10,13 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_174702) do
+ActiveRecord::Schema.define(version: 2020_03_28_184121) do
 
   create_table "buckets", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_buckets_on_name", unique: true
+  end
+
+  create_table "line_item_aliases", force: :cascade do |t|
+    t.string "name"
+    t.string "alias"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["alias"], name: "index_line_item_aliases_on_alias", unique: true
+    t.index ["name"], name: "index_line_item_aliases_on_name", unique: true
   end
 
 end
