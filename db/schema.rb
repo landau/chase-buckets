@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_184121) do
+ActiveRecord::Schema.define(version: 2020_03_29_194531) do
 
   create_table "buckets", force: :cascade do |t|
     t.string "name"
@@ -26,6 +26,16 @@ ActiveRecord::Schema.define(version: 2020_03_28_184121) do
     t.datetime "updated_at", null: false
     t.index ["alias"], name: "index_line_item_aliases_on_alias", unique: true
     t.index ["name"], name: "index_line_item_aliases_on_name", unique: true
+  end
+
+  create_table "line_items", force: :cascade do |t|
+    t.datetime "post_date"
+    t.text "description"
+    t.integer "amount"
+    t.integer "bucket_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bucket_id"], name: "index_line_items_on_bucket_id"
   end
 
 end
