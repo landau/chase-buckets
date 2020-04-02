@@ -1,0 +1,16 @@
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: true
+  Max: 80
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 25
