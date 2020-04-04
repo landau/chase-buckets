@@ -4,7 +4,8 @@
 class IndexController < ApplicationController
   def index
     @notice = params[:notice]
-    @lineItems = LineItem.all.order "post_date desc"
+    @buckets = Bucket.includes(:line_items).all.order(:name).order(:alias)
+    @unbucketed = LineItem.nil_buckets
     render "index"
   end
 end
