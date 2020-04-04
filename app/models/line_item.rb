@@ -4,4 +4,6 @@ class LineItem < ApplicationRecord
   validates :post_date, presence: true
   validates :description, presence: true
   validates :amount, presence: true
+
+  scope :nil_buckets, -> { where(bucket_id: nil) }
 end
