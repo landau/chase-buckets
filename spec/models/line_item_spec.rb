@@ -84,4 +84,38 @@ RSpec.describe LineItem, type: :model do
       expect(items[0]).to eq(no_bucket)
     end
   end
+
+  context "set_matching_line_items_to_bucket" do
+    it "successfully sets all matching descriptions to a bucket" do
+      bucket = Bucket.create!(name: "setting buckets")
+
+      desc = "matching"
+
+      a = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 1,
+        description: desc,
+      )
+
+      b = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 1,
+        description: desc,
+      )
+
+      no_match = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 1,
+        description: "not matching",
+        bucket: Bucket.create!(name: "no_match"),
+      )
+
+      a.set_matching_line_items_to_bucket(bucket.id)
+
+      # expect(a.bucket_id).to eq(bucket.id)
+      expect(LineItem.find(a.id).bucket_id).to eq(bucket.id)
+      expect(LineItem.find(b.id).bucket_id).to eq(bucket.id)
+      expect(LineItem.find(no_match.id).bucket_id).not_to eq(bucket.id)
+    end
+  end
 end
