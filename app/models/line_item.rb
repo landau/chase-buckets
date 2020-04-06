@@ -6,4 +6,10 @@ class LineItem < ApplicationRecord
   validates :amount, presence: true
 
   scope :nil_buckets, -> { where(bucket_id: nil) }
+
+  def set_matching_line_items_to_bucket(bucket_id)
+    LineItem.where(description: self.description)
+      .in_batches
+      .update_all(bucket_id: bucket_id)
+  end
 end

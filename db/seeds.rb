@@ -27,6 +27,13 @@ LineItem.create(
 
 LineItem.create(
   post_date: Time.parse("2020-10-4").iso8601,
+  amount: -4.50,
+  description: "Crappy Coffee",
+  bucket: groceries_bucket,
+)
+
+LineItem.create(
+  post_date: Time.parse("2020-10-4").iso8601,
   amount: -10.54,
   description: "No bucket yet",
 )
