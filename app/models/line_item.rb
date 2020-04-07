@@ -6,6 +6,7 @@ class LineItem < ApplicationRecord
   validates :amount, presence: true
 
   scope :nil_buckets, -> { where(bucket_id: nil) }
+  scope :total_nil_buckets, -> { nil_buckets.sum(:amount) }
 
   def set_matching_line_items_to_bucket(bucket_id)
     LineItem.where(description: self.description)
