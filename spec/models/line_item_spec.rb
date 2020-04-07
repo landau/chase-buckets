@@ -65,23 +65,70 @@ RSpec.describe LineItem, type: :model do
   end
 
   context "scopes" do
-    it "returns line_items without an assigned bucket" do
-      LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "has bucket",
-        bucket: Bucket.create!(name: "foo"),
-      )
+    context "nil_buckets" do
+      it "returns line_items without an assigned bucket" do
+        LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 1,
+          description: "has bucket",
+          bucket: Bucket.create!(name: "foo"),
+        )
 
-      no_bucket = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "no bucket",
-      )
+        no_bucket = LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 1,
+          description: "no bucket",
+        )
 
-      items = LineItem.nil_buckets
-      expect(items.size).to eq(1)
-      expect(items[0]).to eq(no_bucket)
+        items = LineItem.nil_buckets
+        expect(items.size).to eq(1)
+        expect(items[0]).to eq(no_bucket)
+      end
+    end
+
+    context "total_nil_buckets" do
+      it "returns total of all unassigned buckets" do
+        LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 1,
+          description: "has bucket",
+          bucket: Bucket.create!(name: "foo"),
+        )
+
+        no_bucket = LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 2,
+          description: "no bucket",
+        )
+
+        no_bucket2 = LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 3,
+          description: "no bucket as well",
+        )
+
+        expect(LineItem.total_nil_buckets).to eq(
+          no_bucket.amount + no_bucket2.amount
+        )
+      end
+
+      it "returns 0 if all buckets are assigned" do
+        LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 1,
+          description: "has bucket",
+          bucket: Bucket.create!(name: "foo"),
+        )
+
+        LineItem.create!(
+          post_date: Time.now.iso8601,
+          amount: 1,
+          description: "has bucket as well",
+          bucket: Bucket.create!(name: "bar"),
+        )
+
+        expect(LineItem.total_nil_buckets).to eq(0)
+      end
     end
   end
 
