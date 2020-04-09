@@ -165,4 +165,31 @@ RSpec.describe LineItem, type: :model do
       expect(LineItem.find(no_match.id).bucket_id).not_to eq(bucket.id)
     end
   end
+
+  context "create_from_cc_csv" do
+    it "Creates LineItems from a credit card csv file" do
+      expect(LineItem.count).to eq(0)
+
+      csv = fixture_file_upload("files/credit_card.csv", "text/csv")
+
+      line_items = LineItem.create_from_cc_csv!(csv)
+      expect(line_items.length).to eq(2)
+
+      expect(LineItem.count).to eq(line_items.length)
+      expect(LineItem.take(line_items.length)).to eq(line_items)
+
+      expect(line_items[0].post_date).to eq(
+        DateTime.strptime("03/23/2020", "%m/%d/%Y")
+      )
+      expect(line_items[0].description).to eq("foo")
+      # FIXME: will be fixed when field is adjusted to float
+      expect(line_items[0].amount).to eq(-5)
+
+      expect(line_items[1].post_date).to eq(
+        DateTime.strptime("03/24/2020", "%m/%d/%Y")
+      )
+      expect(line_items[1].description).to eq("bar")
+      expect(line_items[1].amount).to eq(-10)
+    end
+  end
 end
