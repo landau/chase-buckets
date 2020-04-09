@@ -41,7 +41,7 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-6">
               <h1 class="h2"></h1>
               <div class="input-group input-group-sm flex-nowrap">
-                <%= form_with(url: "/buckets", method: "post", class: "form-inline", remote: false) do %>
+                <%= form_with(url: "/buckets", method: "post", class: "form-inline", local: true) do %>
                   <%= text_field_tag(:name, nil, class: "form-control", placeholder: "Bucket Name") %>
                   <div class="input-group-append">
                     <%= button_tag("Create", class: "btn btn-outline-secondary") %>
@@ -53,8 +53,18 @@
               <h1 class="h2"></h1>
               <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
+                  <div class="custom-file" id="customFile">
+                    <%= form_with url: upload_cc_path, method: "post", local: true, :html=> {:multipart=>true} do %>
+                      <%= file_field :attachment, :file,
+                        accept: "text/csv, text/plain",
+                        class: "custom-file-input" ,
+                        onchange: 'this.form.submit();'
+                      %>
+                      <label class="custom-file-label" for="customFile">Upload CC CSV</label>
+                    <% end %>
+                  </div>
+                  &nbsp;
                   <button type="button" class="btn btn-sm btn-outline-secondary">Upload Account CSV</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Upload CC CSV</button>
                   <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
                 </div>
               </div>
@@ -82,7 +92,7 @@
             <tbody>
               <% @unbucketed.each do |item|%>
                 <tr>
-                  <td><%= item[:post_date].strftime("%d/%m/%Y") %></td>
+                  <td><%= item[:post_date].strftime("%m/%d/%Y") %></td>
                   <td><%= item[:description] %></td>
                   <td><%= item[:amount] %></td>
                   <td>
