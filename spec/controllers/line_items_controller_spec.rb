@@ -38,4 +38,27 @@ RSpec.describe LineItemsController, type: :controller do
       expect(response).to redirect_to root_url({ notice: notice })
     end
   end
+
+  context "#upload_cc" do
+    it "generates a route for uploading a credit card csv" do
+      assert_routing(
+        { path: "line_items/upload/cc", method: :post },
+        {
+          controller: "line_items",
+          action: "upload_cc",
+        },
+      )
+    end
+
+    it "Creates LineItems from an uploaded csv" do
+      file = fixture_file_upload("files/credit_card.csv", "text/csv")
+      post :upload_cc, params: { attachment: { file: file } }
+
+      expect(LineItem.count).to eq(2)
+      expect(response).to have_http_status(:see_other)
+
+      notice = "Successfully uploaded Credit Card CSV"
+      expect(response).to redirect_to root_url({ notice: notice })
+    end
+  end
 end

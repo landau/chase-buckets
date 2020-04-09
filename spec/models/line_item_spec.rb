@@ -170,11 +170,7 @@ RSpec.describe LineItem, type: :model do
     it "Creates LineItems from a credit card csv file" do
       expect(LineItem.count).to eq(0)
 
-      csv = <<-EOF
-      Transaction Date,Post Date,Description,Category,Type,Amount
-      03/21/2020,03/23/2020,foo,Home,Sale,-5.12
-      03/22/2020,03/24/2020,bar,Food & Drink,Sale,-10.31
-      EOF
+      csv = fixture_file_upload("files/credit_card.csv", "text/csv")
 
       line_items = LineItem.create_from_cc_csv!(csv)
       expect(line_items.length).to eq(2)
