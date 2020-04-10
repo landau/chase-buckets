@@ -1,41 +1,43 @@
 require "rails_helper"
 
 RSpec.describe LineItemsController, type: :controller do
-  context "#bucket" do
-    it "generates a route for assigning line items to a bucket" do
+  context "#assign_line_item" do
+    it "Generates a route for assigning line items to a description" do
       assert_routing(
-        { path: "line_items/1/bucket", method: :post },
+        { path: "line-items/:line_item_id/assign-line-item", method: :put },
         {
-          only: [:update],
           controller: "line_items",
-          action: "bucket",
-          line_item_id: "1",
+          action: "assign_line_item",
+          line_item_id: ":line_item_id",
         },
       )
     end
 
-    pending "Assigns all line items with a matching description to a bucket" do
-      desc = "test desc"
+    it "Assigns a line item description to a bucket" do
+      d = Description.create! value: "no bucket yet"
+      b = Bucket.create! name: "foo"
+      l = LineItem.create! post_date: Time.now.iso8601, amount: 1, description: d.value
 
-      line_item = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: desc,
-      )
+      expect(b.descriptions.pluck(:value)).to eq([])
 
-      # line_item2 = LineItem.create!(
-      #   post_date: Time.now.iso8601,
-      #   amount: 2,
-      #   description: desc,
-      # )
+      put :assign_line_item, params: { bucket: { id: b.id }, line_item_id: l.id }
 
-      # bucket = Bucket.create!(name: "test")
-
-      post :line_item_bucket, params: { line_item_id: line_item.id }
-      expect(response).to have_http_status(:see_other)
-
-      notice = "New bucket '#{buckets[0].name}' was created successfully"
+      notice = "'#{l.description}' has been assigned to '#{b.name}'"
       expect(response).to redirect_to root_url({ notice: notice })
+
+      expect(b.descriptions.pluck(:value)).to eq([l.description])
+    end
+
+    it "Unassigns a line item description from a bucket" do
+      d = Description.create! value: "no bucket yet"
+      b = Bucket.create! name: "foo"
+      l = LineItem.create! post_date: Time.now.iso8601, amount: 1, description: d.value
+
+      expect(b.descriptions.pluck(:value)).to eq([])
+      put :assign_line_item, params: { bucket: { id: b.id }, line_item_id: l.id }
+      expect(b.descriptions.pluck(:value)).to eq([l.description])
+      put :assign_line_item, params: { bucket: { id: "" }, line_item_id: l.id }
+      expect(b.descriptions.pluck(:value)).to eq([])
     end
   end
 
@@ -59,6 +61,8 @@ RSpec.describe LineItemsController, type: :controller do
 
       notice = "Successfully uploaded Credit Card CSV"
       expect(response).to redirect_to root_url({ notice: notice })
+
+      expect(Description.count).to eq(2)
     end
   end
 end
