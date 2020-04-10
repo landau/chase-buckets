@@ -39,45 +39,23 @@ RSpec.describe LineItem, type: :model do
     end
   end
 
-  context "associations" do
-    it "Allows for optional bucket" do
-      line_item = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "desc",
-      )
-
-      expect(line_item.bucket).to eq(nil)
-    end
-
-    it "Sets a bucket" do
-      bucket = Bucket.create!(name: "foo")
-
-      line_item = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "desc",
-        bucket: bucket,
-      )
-
-      expect(line_item.bucket).to eq(bucket)
-    end
-  end
-
   context "scopes" do
     context "nil_buckets" do
       it "returns line_items without an assigned bucket" do
+        d = Description.create! value: "has bucket"
+        d2 = Description.create! value: "no bucket"
+        b = Bucket.create! name: "foo", descriptions: [d]
+
         LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 1,
-          description: "has bucket",
-          bucket: Bucket.create!(name: "foo"),
+          description: d.value,
         )
 
         no_bucket = LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 1,
-          description: "no bucket",
+          description: d2.value,
         )
 
         items = LineItem.nil_buckets
@@ -88,17 +66,22 @@ RSpec.describe LineItem, type: :model do
 
     context "total_nil_buckets" do
       it "returns total of all unassigned buckets" do
+        d = Description.create! value: "has bucket"
+        Bucket.create! name: "foo", descriptions: [d]
+
         LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 1,
-          description: "has bucket",
-          bucket: Bucket.create!(name: "foo"),
+          description: d.value,
         )
+
+        d2 = Description.create! value: "no bucket"
+        d3 = Description.create! value: "no bucket as well"
 
         no_bucket = LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 2,
-          description: "no bucket",
+          description: d2.value,
         )
 
         no_bucket2 = LineItem.create!(
@@ -113,56 +96,24 @@ RSpec.describe LineItem, type: :model do
       end
 
       it "returns 0 if all buckets are assigned" do
+        d = Description.create! value: "has bucket"
+        d2 = Description.create! value: "has same bucket"
+        Bucket.create! name: "foo", descriptions: [d, d2]
+
         LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 1,
-          description: "has bucket",
-          bucket: Bucket.create!(name: "foo"),
+          description: d.value,
         )
 
         LineItem.create!(
           post_date: Time.now.iso8601,
           amount: 1,
-          description: "has bucket as well",
-          bucket: Bucket.create!(name: "bar"),
+          description: d2.value,
         )
 
         expect(LineItem.total_nil_buckets).to eq(0)
       end
-    end
-  end
-
-  context "set_matching_line_items_to_bucket" do
-    it "successfully sets all matching descriptions to a bucket" do
-      bucket = Bucket.create!(name: "setting buckets")
-
-      desc = "matching"
-
-      a = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: desc,
-      )
-
-      b = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: desc,
-      )
-
-      no_match = LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "not matching",
-        bucket: Bucket.create!(name: "no_match"),
-      )
-
-      a.set_matching_line_items_to_bucket(bucket.id)
-
-      # expect(a.bucket_id).to eq(bucket.id)
-      expect(LineItem.find(a.id).bucket_id).to eq(bucket.id)
-      expect(LineItem.find(b.id).bucket_id).to eq(bucket.id)
-      expect(LineItem.find(no_match.id).bucket_id).not_to eq(bucket.id)
     end
   end
 

@@ -21,38 +21,86 @@ RSpec.describe Bucket, type: :model do
     end
   end
 
-  context "total_line_items" do
-    it "returns 0 if line items are not assigned to a bucket" do
-      bucket = Bucket.create!(name: "foo")
-      expect(bucket.total_line_items).to eq(0)
+  context "descriptions" do
+    it "Returns associated descriptions" do
+      d = Description.create([{ value: "foo" }, { value: "bar" }])
+      b = Bucket.create!(name: "unaffected_bucket", descriptions: d)
+      expect(b.descriptions).to eq(d)
     end
+  end
 
-    it "returns total of line item assigned to bucket" do
-      bucket = Bucket.create!(name: "foo")
-      Bucket.create!(name: "unaffected_bucket")
-
-      line_item = LineItem.create!(
+  context "line_items" do
+    it "returns [] if there arent line items with matching descriptions" do
+      d = Description.create! value: "foo"
+      b = Bucket.create! name: "foo", descriptions: [d]
+      l1 = LineItem.create!(
         post_date: Time.now.iso8601,
         amount: 10,
-        description: "has bucket",
-        bucket: bucket,
+        description: "no bucket",
+      )
+
+      expect(b.line_items).to eq([])
+    end
+
+    it "returns line items associated with bucket descriptions" do
+      d1 = Description.create value: "shared line item bucket"
+      d2 = Description.create value: "has same bucket"
+      d3 = Description.create value: "no bucket"
+
+      l1 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 10,
+        description: d1.value,
+      )
+
+      l2 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 11,
+        description: d2.value,
+      )
+
+      l3 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 13,
+        description: d1.value,
       )
 
       LineItem.create!(
         post_date: Time.now.iso8601,
-        amount: 10,
-        description: "unaffected_line_item",
+        amount: 500,
+        description: d3.value,
       )
 
-      expect(bucket.total_line_items).to eq(line_item.amount)
+      b = Bucket.create!(name: "foo", descriptions: [d1, d2])
+      expect(b.line_items).to eq([l1, l2, l3])
     end
   end
 
-  context ":descriptions field" do
-    it "Serializes properly" do
-      descriptions = ["foo"]
-      b = Bucket.create!(name: "unaffected_bucket", descriptions: descriptions)
-      expect(b.descriptions).to eq(descriptions)
+  context "total_line_items" do
+    it "returns total of line item assigned to bucket" do
+      d1 = Description.create value: "has bucket"
+      d2 = Description.create value: "has same bucket"
+
+      l1 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 10,
+        description: d1.value,
+      )
+
+      l2 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 11,
+        description: d2.value,
+      )
+
+      l3 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 13,
+        description: d1.value,
+      )
+
+      b = Bucket.create!(name: "foo", descriptions: [d1, d2])
+      expect(b.total_line_items).to eq(l1.amount + l2.amount + l3.amount)
     end
   end
 end

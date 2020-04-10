@@ -8,35 +8,33 @@ require "time"
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-check_bucket = Bucket.create(name: "Checks")
-groceries_bucket = Bucket.create(name: "Groceries")
+d1 = Description.create! value: "BDay Money from Grandma"
+d2 = Description.create! value: "Coffee"
+d3 = Description.create! value: "No bucket"
+
+check_bucket = Bucket.create! name: "Checks", descriptions: [d1]
+groceries_bucket = Bucket.create! name: "Groceries", descriptions: [d2]
 
 LineItem.create(
   post_date: Time.parse("2020-10-5").iso8601,
   amount: 500.23,
-  description: "BDay Money from Grandma",
-  bucket: check_bucket,
+  description: d1.value,
 )
 
 LineItem.create(
   post_date: Time.parse("2020-10-4").iso8601,
   amount: -10.54,
-  description: "Crappy Coffee",
-  bucket: groceries_bucket,
+  description: d2.value,
 )
 
 LineItem.create(
   post_date: Time.parse("2020-10-4").iso8601,
   amount: -4.50,
-  description: "Crappy Coffee",
-  bucket: groceries_bucket,
+  description: d2.value,
 )
 
 LineItem.create(
   post_date: Time.parse("2020-10-4").iso8601,
   amount: -10.54,
-  description: "No bucket yet",
+  description: d3.value,
 )
-
-# FIXME: This is causing a unique constraint error
-# LineItemAlias.create(name: "Crappy Coffee", alias: "Very Crappy Coffee")

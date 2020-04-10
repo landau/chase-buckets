@@ -96,7 +96,7 @@
                   <td><%= item[:description] %></td>
                   <td><%= item[:amount] %></td>
                   <td>
-                    <%= form_with model: item, url: line_item_bucket_path(item), scope: :bucket, method: :post, local: true do |f| %>
+                    <%= form_with model: item, url: assign_line_item_path(item), scope: :bucket, method: :put, local: true do |f| %>
                       <%= f.collection_select(
                         :id, Bucket.all, :id, :name,
                         { include_blank: "None", :selected => "None"},
@@ -127,7 +127,7 @@
                     <td><%= item[:description] %></td>
                     <td><%= item[:amount] %></td>
                     <td>
-                      <%= form_with model: item, url: line_item_bucket_path(item), scope: :bucket, method: :post, local: true do |f| %>
+                      <%= form_with model: item, url: assign_line_item_path(item), scope: :bucket, method: :put, local: true do |f| %>
                         <%= f.collection_select(
                           :id, Bucket.all, :id, :name,
                           { include_blank: "None", :selected => bucket.id},

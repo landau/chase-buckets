@@ -4,9 +4,9 @@ class CreateLineItems < ActiveRecord::Migration[5.2]
       t.datetime :post_date
       t.text :description
       t.integer :amount
-      t.references :bucket, foreign_key: true
-
       t.timestamps
     end
+
+    add_index :line_items, :post_date
   end
 end
