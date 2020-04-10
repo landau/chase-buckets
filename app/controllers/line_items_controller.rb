@@ -5,6 +5,8 @@ class LineItemsController < ApplicationController
 
     # Update all line items matching this description
     line_item = LineItem.find(params.permit(:line_item_id)[:line_item_id])
+
+    # TODO: Lookup bucket and add description
     line_item.set_matching_line_items_to_bucket(bucket_id)
 
     redirect_to_index notice_for_item_and_bucket(line_item, bucket_id)

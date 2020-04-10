@@ -47,4 +47,12 @@ RSpec.describe Bucket, type: :model do
       expect(bucket.total_line_items).to eq(line_item.amount)
     end
   end
+
+  context ":descriptions field" do
+    it "Serializes properly" do
+      descriptions = ["foo"]
+      b = Bucket.create!(name: "unaffected_bucket", descriptions: descriptions)
+      expect(b.descriptions).to eq(descriptions)
+    end
+  end
 end
