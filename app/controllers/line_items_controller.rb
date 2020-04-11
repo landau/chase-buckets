@@ -23,6 +23,20 @@ class LineItemsController < ApplicationController
     return redirect_to_index "Successfully uploaded Credit Card CSV"
   end
 
+  def upload_account
+    LineItem.create_from_account_csv!(
+      params.require(:attachment).permit(:file)[:file].read
+    )
+
+    existing = Description.all.pluck :value
+    uploaded_descs = LineItem.all.pluck :description
+    (uploaded_descs - existing).each do |desc|
+      Description.find_or_create_by value: desc
+    end
+
+    return redirect_to_index "Successfully uploaded Account CSV"
+  end
+
   private
 
   def redirect_to_index(notice)

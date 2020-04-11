@@ -65,4 +65,29 @@ RSpec.describe LineItemsController, type: :controller do
       expect(Description.count).to eq(2)
     end
   end
+
+  context "#upload_account" do
+    it "generates a route for uploading an account csv" do
+      assert_routing(
+        { path: "line_items/upload/account", method: :post },
+        {
+          controller: "line_items",
+          action: "upload_account",
+        },
+      )
+    end
+
+    it "Creates LineItems from an uploaded csv" do
+      file = fixture_file_upload("files/account.csv", "text/csv")
+      post :upload_account, params: { attachment: { file: file } }
+
+      expect(LineItem.count).to eq(2)
+      expect(response).to have_http_status(:see_other)
+
+      notice = "Successfully uploaded Account CSV"
+      expect(response).to redirect_to root_url({ notice: notice })
+
+      expect(Description.count).to eq(2)
+    end
+  end
 end
