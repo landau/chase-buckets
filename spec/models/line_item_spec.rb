@@ -143,4 +143,31 @@ RSpec.describe LineItem, type: :model do
       expect(line_items[1].amount).to eq(-10)
     end
   end
+
+  context "create_from_account_csv" do
+    it "Creates LineItems from an account csv file" do
+      expect(LineItem.count).to eq(0)
+
+      csv = fixture_file_upload("files/account.csv", "text/csv")
+
+      line_items = LineItem.create_from_account_csv!(csv)
+      expect(line_items.length).to eq(2)
+
+      expect(LineItem.count).to eq(line_items.length)
+      expect(LineItem.take(line_items.length)).to eq(line_items)
+
+      expect(line_items[0].post_date).to eq(
+        DateTime.strptime("03/27/2020", "%m/%d/%Y")
+      )
+      expect(line_items[0].description).to eq("foo")
+      # FIXME: will be fixed when field is adjusted to float
+      expect(line_items[0].amount).to eq(-65)
+
+      expect(line_items[1].post_date).to eq(
+        DateTime.strptime("03/26/2020", "%m/%d/%Y")
+      )
+      expect(line_items[1].description).to eq("bar")
+      expect(line_items[1].amount).to eq(-234)
+    end
+  end
 end

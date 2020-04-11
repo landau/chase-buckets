@@ -64,8 +64,17 @@
                     <% end %>
                   </div>
                   &nbsp;
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Upload Account CSV</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                  <div class="custom-file" id="customFile">
+                    <%= form_with url: upload_account_path, method: "post", local: true, :html=> {:multipart=>true} do %>
+                      <%= file_field :attachment, :file,
+                        accept: "text/csv, text/plain",
+                        class: "custom-file-input" ,
+                        onchange: 'this.form.submit();'
+                      %>
+                      <label class="custom-file-label" for="customFile">Upload Account CSV</label>
+                    <% end %>
+                  </div>
+                  <%# <button type="button" class="btn btn-sm btn-outline-secondary">Export</button> %>
                 </div>
               </div>
             </div>
