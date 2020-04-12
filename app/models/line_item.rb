@@ -21,7 +21,7 @@ class LineItem < ApplicationRecord
              string_or_io,
              header_converters: [:symbol],
              converters: [
-               :numeric,
+               :float,
                ->field, info {
                  info.header == :post_date ?
                    CsvFieldFormatter::format_date(field) :
@@ -41,7 +41,7 @@ class LineItem < ApplicationRecord
                :symbol,
              ],
              converters: [
-               :numeric,
+               :float,
                ->field, info {
                  info.header == :post_date ?
                    CsvFieldFormatter::format_date(field) :

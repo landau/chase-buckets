@@ -25,17 +25,16 @@ RSpec.describe LineItem, type: :model do
     end
 
     it "Successfully saves" do
-      LineItem.create!(
-        post_date: Time.now.iso8601,
-        amount: 1,
+      time = Time.now.iso8601
+
+      line_item = LineItem.create!(
+        post_date: time,
+        amount: 1.51,
         description: "desc",
       )
-      line_item = LineItem.new(
-        post_date: Time.now.iso8601,
-        amount: 1,
-        description: "desc",
-      ).save
-      expect(line_item).to eq(true)
+      expect(line_item.amount).to eq(1.51)
+      expect(line_item.description).to eq("desc")
+      expect(line_item.post_date).to eq(time)
     end
   end
 
@@ -133,14 +132,13 @@ RSpec.describe LineItem, type: :model do
         DateTime.strptime("03/23/2020", "%m/%d/%Y")
       )
       expect(line_items[0].description).to eq("foo")
-      # FIXME: will be fixed when field is adjusted to float
-      expect(line_items[0].amount).to eq(-5)
+      expect(line_items[0].amount).to eq(BigDecimal(-5.12, 15))
 
       expect(line_items[1].post_date).to eq(
         DateTime.strptime("03/24/2020", "%m/%d/%Y")
       )
       expect(line_items[1].description).to eq("bar")
-      expect(line_items[1].amount).to eq(-10)
+      expect(line_items[1].amount).to eq(BigDecimal(10.31, 15))
     end
   end
 
@@ -160,14 +158,13 @@ RSpec.describe LineItem, type: :model do
         DateTime.strptime("03/27/2020", "%m/%d/%Y")
       )
       expect(line_items[0].description).to eq("foo")
-      # FIXME: will be fixed when field is adjusted to float
-      expect(line_items[0].amount).to eq(-65)
+      expect(line_items[0].amount).to eq(BigDecimal(-65.12, 15))
 
       expect(line_items[1].post_date).to eq(
         DateTime.strptime("03/26/2020", "%m/%d/%Y")
       )
       expect(line_items[1].description).to eq("bar")
-      expect(line_items[1].amount).to eq(-234)
+      expect(line_items[1].amount).to eq(BigDecimal(234.51, 15))
     end
   end
 end
