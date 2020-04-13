@@ -103,7 +103,7 @@
                 <tr>
                   <td><%= item[:post_date].strftime("%m/%d/%Y") %></td>
                   <td><%= item[:description] %></td>
-                  <td><%= item[:amount] %></td>
+                  <td><%= number_to_currency item[:amount] %></td>
                   <td>
                     <%= form_with model: item, url: assign_line_item_path(item), scope: :bucket, method: :put, local: true do |f| %>
                       <%= f.collection_select(
@@ -134,7 +134,7 @@
                   <tr>
                     <td><%= item[:post_date].strftime("%d/%m/%Y") %></td>
                     <td><%= item[:description] %></td>
-                    <td><%= item[:amount] %></td>
+                    <td><%= number_to_currency item[:amount] %></td>
                     <td>
                       <%= form_with model: item, url: assign_line_item_path(item), scope: :bucket, method: :put, local: true do |f| %>
                         <%= f.collection_select(

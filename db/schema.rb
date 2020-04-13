@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2020_04_10_113740) do
   create_table "line_items", force: :cascade do |t|
     t.datetime "post_date"
     t.text "description"
-    t.integer "amount"
+    t.decimal "amount", precision: 15, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["post_date"], name: "index_line_items_on_post_date"

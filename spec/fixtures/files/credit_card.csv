@@ -1,3 +1,3 @@
 Transaction Date,Post Date,Description,Category,Type,Amount
 03/21/2020,03/23/2020,foo,Home,Sale,-5.12
-03/22/2020,03/24/2020,bar,Food & Drink,Sale,-10.31
+03/22/2020,03/24/2020,bar,Food & Drink,Sale,10.31

@@ -3,7 +3,7 @@ class CreateLineItems < ActiveRecord::Migration[5.2]
     create_table :line_items do |t|
       t.datetime :post_date
       t.text :description
-      t.integer :amount
+      t.decimal :amount, precision: 15, scale: 2
       t.timestamps
     end
 
