@@ -64,8 +64,14 @@ class LineItem < ApplicationRecord
 
     # In the case an unknown column is entered
     headers_to_delete << nil
+
     # TODO: can discard columns at read time?
     headers_to_delete.each { |s| csv.delete(s) }
-    return LineItem.create!(csv.map { |row| row.to_hash })
+
+    line_items = nil
+    LineItem.transaction do
+      line_items = LineItem.create!(csv.map { |row| row.to_hash })
+    end
+    return line_items
   end
 end

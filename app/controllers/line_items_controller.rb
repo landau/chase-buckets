@@ -3,37 +3,32 @@ class LineItemsController < ApplicationController
     bucket_params = params.require(:bucket).permit(:id)
     bucket_id = bucket_params[:id] == "" ? nil : bucket_params[:id]
 
-    line_item = LineItem.find(params.permit(:line_item_id)[:line_item_id])
-    desc = Description.where(value: line_item.description).update(bucket_id: bucket_id)
+    line_item = LineItem.find params.permit(:line_item_id)[:line_item_id]
+    Description.where(value: line_item.description).update(bucket_id: bucket_id)
 
     redirect_to_index notice_for_item_and_bucket(line_item, bucket_id)
   end
 
   def upload_cc
-    LineItem.create_from_cc_csv!(
-      params.require(:attachment).permit(:file)[:file].read
+    Description.create_batch(
+      LineItem.create_from_cc_csv!(
+        params.require(:attachment).permit(:file)[:file].read
+      )
+        .map { |l| l.description }
     )
-
-    existing = Description.all.pluck :value
-    uploaded_descs = LineItem.all.pluck :description
-    (uploaded_descs - existing).each do |desc|
-      Description.find_or_create_by value: desc
-    end
-
     return redirect_to_index "Successfully uploaded Credit Card CSV"
   end
 
   def upload_account
-    LineItem.create_from_account_csv!(
-      params.require(:attachment).permit(:file)[:file].read
+    # starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    # ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    # puts ending - starting
+    Description.create_batch(
+      LineItem.create_from_account_csv!(
+        params.require(:attachment).permit(:file)[:file].read
+      )
+        .map { |l| l.description }
     )
-
-    existing = Description.all.pluck :value
-    uploaded_descs = LineItem.all.pluck :description
-    (uploaded_descs - existing).each do |desc|
-      Description.find_or_create_by value: desc
-    end
-
     return redirect_to_index "Successfully uploaded Account CSV"
   end
 
