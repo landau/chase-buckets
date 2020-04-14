@@ -21,6 +21,18 @@ RSpec.describe Bucket, type: :model do
     end
   end
 
+  context "scopes" do
+    it "returns a list of buckets that have matching line_item descriptions" do
+      d1 = Description.create value: "has bucket"
+      b1 = Bucket.create! name: "foo", descriptions: [d1]
+      Bucket.create! name: "bar"
+
+      buckets = Bucket.where_has_line_items
+      expect(buckets.length).to eq(1)
+      expect(buckets[0]).to eq(b1)
+    end
+  end
+
   context "descriptions" do
     it "Returns associated descriptions" do
       d = Description.create([{ value: "foo" }, { value: "bar" }])

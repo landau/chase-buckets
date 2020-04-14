@@ -1,5 +1,5 @@
 class Description < ApplicationRecord
-  belongs_to :bucket, optional: true
+  belongs_to :bucket, optional: true, counter_cache: true
   validates :value, presence: true, uniqueness: true
 
   scope :unassigned, -> { where(bucket_id: nil) }
