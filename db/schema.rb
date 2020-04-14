@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 2020_04_10_113740) do
   create_table "buckets", force: :cascade do |t|
     t.string "name"
     t.text "descriptions"
+    t.integer "descriptions_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_buckets_on_name", unique: true
