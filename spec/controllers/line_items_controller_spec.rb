@@ -56,13 +56,13 @@ RSpec.describe LineItemsController, type: :controller do
       file = fixture_file_upload("files/credit_card.csv", "text/csv")
       post :upload_cc, params: { attachment: { file: file } }
 
-      expect(LineItem.count).to eq(2)
+      expect(LineItem.count).to eq(3)
       expect(response).to have_http_status(:see_other)
 
       notice = "Successfully uploaded Credit Card CSV"
       expect(response).to redirect_to root_url({ notice: notice })
 
-      expect(Description.count).to eq(2)
+      expect(Description.count).to eq(3)
     end
   end
 
@@ -81,13 +81,13 @@ RSpec.describe LineItemsController, type: :controller do
       file = fixture_file_upload("files/account.csv", "text/csv")
       post :upload_account, params: { attachment: { file: file } }
 
-      expect(LineItem.count).to eq(2)
+      expect(LineItem.count).to eq(3)
       expect(response).to have_http_status(:see_other)
 
       notice = "Successfully uploaded Account CSV"
       expect(response).to redirect_to root_url({ notice: notice })
 
-      expect(Description.count).to eq(2)
+      expect(Description.count).to eq(3)
     end
   end
 end

@@ -55,6 +55,9 @@ class LineItem < ApplicationRecord
   def self.create_from_csv!(
     string_or_io, header_converters:, converters:, headers_to_delete:
   )
+    # Trim surrounding whitespace for all fields
+    converters << ->field, info { field.is_a?(String) ? field.strip : field }
+
     csv = CSV.new(
       string_or_io,
       headers: true,
