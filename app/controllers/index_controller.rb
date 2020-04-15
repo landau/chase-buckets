@@ -26,6 +26,7 @@ class IndexController < ApplicationController
     @buckets = no_buckets + buckets
     @notice = params[:notice]
     @all_buckets = Bucket.all
+    @bucket_count = @all_buckets.count
 
     render "index"
   end
