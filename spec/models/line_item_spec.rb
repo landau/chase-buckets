@@ -123,7 +123,7 @@ RSpec.describe LineItem, type: :model do
       csv = fixture_file_upload("files/credit_card.csv", "text/csv")
 
       line_items = LineItem.create_from_cc_csv!(csv)
-      expect(line_items.length).to eq(2)
+      expect(line_items.length).to eq(3)
 
       expect(LineItem.count).to eq(line_items.length)
       expect(LineItem.take(line_items.length)).to eq(line_items)
@@ -140,6 +140,17 @@ RSpec.describe LineItem, type: :model do
       expect(line_items[1].description).to eq("bar")
       expect(line_items[1].amount).to eq(BigDecimal(10.31, 15))
     end
+
+    it "Strips surrounding white space for string fields" do
+      csv = fixture_file_upload("files/credit_card.csv", "text/csv")
+      line_items = LineItem.create_from_cc_csv!(csv)
+
+      expect(line_items[2].post_date).to eq(
+        DateTime.strptime("03/24/2020", "%m/%d/%Y")
+      )
+      expect(line_items[2].description).to eq("surrounding whitespace")
+      expect(line_items[2].amount).to eq(BigDecimal(10.00, 15))
+    end
   end
 
   context "create_from_account_csv" do
@@ -149,7 +160,7 @@ RSpec.describe LineItem, type: :model do
       csv = fixture_file_upload("files/account.csv", "text/csv")
 
       line_items = LineItem.create_from_account_csv!(csv)
-      expect(line_items.length).to eq(2)
+      expect(line_items.length).to eq(3)
 
       expect(LineItem.count).to eq(line_items.length)
       expect(LineItem.take(line_items.length)).to eq(line_items)
@@ -165,6 +176,17 @@ RSpec.describe LineItem, type: :model do
       )
       expect(line_items[1].description).to eq("bar")
       expect(line_items[1].amount).to eq(BigDecimal(234.51, 15))
+    end
+
+    it "Strips surrounding white space for string fields" do
+      csv = fixture_file_upload("files/account.csv", "text/csv")
+      line_items = LineItem.create_from_account_csv!(csv)
+
+      expect(line_items[2].post_date).to eq(
+        DateTime.strptime("03/26/2020", "%m/%d/%Y")
+      )
+      expect(line_items[2].description).to eq("surrounding whitespace")
+      expect(line_items[2].amount).to eq(BigDecimal(10.00, 15))
     end
   end
 end

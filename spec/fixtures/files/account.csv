@@ -1,3 +1,4 @@
 Details,Posting Date,Description,Amount,Type,Balance,Check or Slip #
 DEBIT,03/27/2020,"foo",-65.12,ACH_DEBIT,,,
 CHECK,03/26/2020,"bar",234.51,CHECK_PAID,,,
+CHECK,03/26/2020,"     surrounding whitespace     ",10.00,CHECK_PAID,,,
