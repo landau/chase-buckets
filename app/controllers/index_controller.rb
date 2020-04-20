@@ -8,7 +8,7 @@ class IndexController < ApplicationController
     no_buckets = unbucketed_line_items.length > 0 ? [
       {
         id: "None",
-        name: "",
+        name: nil,
         total: unbucketed_line_items.sum(:amount),
         line_items: unbucketed_line_items,
       },
