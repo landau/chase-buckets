@@ -18,6 +18,7 @@ class IndexController < ApplicationController
       {
         id: b.id,
         name: b.name,
+        # TODO: Use LineItem to get these values
         total: b.total_line_items,
         line_items: b.line_items,
       }
