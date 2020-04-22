@@ -23,7 +23,6 @@ class IndexController < ApplicationController
         line_items: b.line_items,
       }
     end
-    puts buckets
 
     @buckets = no_buckets + buckets
     @notice = params[:notice]
