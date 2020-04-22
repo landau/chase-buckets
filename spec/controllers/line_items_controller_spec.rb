@@ -90,4 +90,27 @@ RSpec.describe LineItemsController, type: :controller do
       expect(Description.count).to eq(3)
     end
   end
+
+  context "#delete_all" do
+    it "generates a route for uploading an account csv" do
+      assert_routing(
+        { path: "line_items/all", method: :delete },
+        {
+          controller: "line_items",
+          action: "delete_all_line_items",
+        },
+      )
+    end
+
+    it "deletes all line_items from the db" do
+      LineItem.create! post_date: Time.now.iso8601, amount: 1, description: "foo"
+      LineItem.create! post_date: Time.now.iso8601, amount: 1, description: "bar"
+      expect(LineItem.count).to eq(2)
+
+      delete :delete_all_line_items
+      expect(LineItem.count).to eq(0)
+      expect(response).to have_http_status(:see_other)
+      expect(response).to redirect_to root_url
+    end
+  end
 end

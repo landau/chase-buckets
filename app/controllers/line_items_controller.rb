@@ -32,6 +32,11 @@ class LineItemsController < ApplicationController
     return redirect_to_index "Successfully uploaded Account CSV"
   end
 
+  def delete_all_line_items
+    LineItem.destroy_all
+    redirect_to controller: :index, action: :index, status: :see_other
+  end
+
   private
 
   def redirect_to_index(notice)

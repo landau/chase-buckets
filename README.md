@@ -5,7 +5,8 @@
 ## Usage
 
 1. Install deps: `bundle`
-2. Run: `rails s`
+2. `rails db:migrate RAILS_ENV=development`
+3. Run: `./bin/rails s`
 
 ## Tests
 

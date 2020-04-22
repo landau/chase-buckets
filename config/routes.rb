@@ -8,4 +8,7 @@ Rails.application.routes.draw do
   put "/line-items/:line_item_id/assign-line-item",
     to: "line_items#assign_line_item",
     as: "assign_line_item"
+
+  delete "/line_items/all", to: "line_items#delete_all_line_items",
+                            as: "delete_all_line_items"
 end

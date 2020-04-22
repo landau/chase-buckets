@@ -74,22 +74,32 @@
                       <label class="custom-file-label" for="customFile">Upload Account CSV</label>
                     <% end %>
                   </div>
-                  <%# <button type="button" class="btn btn-sm btn-outline-secondary">Export</button> %>
                 </div>
               </div>
             </div>
           </div>
           <div class="row pt-3 border-bottom"></div>
+          <div class="row pt-3">
+            <div class="col-5"></div>
+            <div class="col-7">
+              <div class="btn-group d-flex align-items-end">
+                <%= button_to "Delete Entries",
+                    { action: :delete_all_line_items, controller: :line_items },
+                    method: "delete", remote: true,
+                    class: "btn btn-danger btn-sm",
+                    data: { confirm: "Are you sure you want to delete all entries?" }
+                  %>
+              </div>
+            </div>
+          </div>
         </div>
         <% if @notice != nil %>
-          <div class="alert alert-info" role="alert">
-            <%= @notice %>
-          </div>
+          <div class="alert alert-info" role="alert"><%= @notice %></div>
         <% end %>
         <div class="table-responsive">
           <% @buckets.each do |bucket|%>
             <span class="badge badge-success float-right p-1">Total: $<%= bucket[:total] %></span>
-            <h4><%= bucket[:name] %></h4>
+            <h4><%= bucket[:name] ? bucket[:name] : "&nbsp;".html_safe %></h4>
             <table class="table table-striped table-sm table-hover table-fixed shadow-sm">
               <thead class="thead-light">
                 <tr>
