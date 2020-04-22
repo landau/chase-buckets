@@ -24,12 +24,26 @@ RSpec.describe Bucket, type: :model do
   context "scopes" do
     it "returns a list of buckets that have matching line_item descriptions" do
       d1 = Description.create value: "has bucket"
+      l1 = LineItem.create!(
+        post_date: Time.now.iso8601,
+        amount: 10,
+        description: d1.value,
+      )
       b1 = Bucket.create! name: "foo", descriptions: [d1]
       Bucket.create! name: "bar"
 
       buckets = Bucket.where_has_line_items
       expect(buckets.length).to eq(1)
       expect(buckets[0]).to eq(b1)
+    end
+
+    it "Does not return any buckets for non matching line_items" do
+      d1 = Description.create value: "has bucket"
+      b1 = Bucket.create! name: "foo", descriptions: [d1]
+      Bucket.create! name: "bar"
+
+      buckets = Bucket.where_has_line_items
+      expect(buckets.length).to eq(0)
     end
   end
 
