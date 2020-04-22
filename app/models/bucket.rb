@@ -18,6 +18,6 @@ class Bucket < ApplicationRecord
   end
 
   def total_line_items
-    self.line_items.count
+    self.line_items.sum :amount
   end
 end
