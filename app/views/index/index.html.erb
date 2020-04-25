@@ -14,7 +14,11 @@
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
+              <svg class="bi bi-clipboard-data" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M4 1.5H3a2 2 0 00-2 2V14a2 2 0 002 2h10a2 2 0 002-2V3.5a2 2 0 00-2-2h-1v1h1a1 1 0 011 1V14a1 1 0 01-1 1H3a1 1 0 01-1-1V3.5a1 1 0 011-1h1v-1z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M9.5 1h-3a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h3a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5zm-3-1A1.5 1.5 0 005 1.5v1A1.5 1.5 0 006.5 4h3A1.5 1.5 0 0011 2.5v-1A1.5 1.5 0 009.5 0h-3z" clip-rule="evenodd"/>
+                <path d="M4 11a1 1 0 112 0v1a1 1 0 11-2 0v-1zm6-4a1 1 0 112 0v5a1 1 0 11-2 0V7zM7 9a1 1 0 012 0v3a1 1 0 11-2 0V9z"/>
+              </svg>
               Dashboard <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -29,14 +33,35 @@
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
               <%= link_to buckets_path, class: "nav-link" do %>
-                <span data-feather="clipboard"></span>Manage (<%= @bucket_count %>)
+                <svg class="bi bi-bucket" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M8 1.5A4.5 4.5 0 003.5 6h-1a5.5 5.5 0 1111 0h-1A4.5 4.5 0 008 1.5z" clip-rule="evenodd"/>
+                  <path fill-rule="evenodd" d="M1.61 5.687A.5.5 0 012 5.5h12a.5.5 0 01.488.608l-1.826 8.217a1.5 1.5 0 01-1.464 1.175H4.802a1.5 1.5 0 01-1.464-1.175L1.512 6.108a.5.5 0 01.098-.42zm1.013.813l1.691 7.608a.5.5 0 00.488.392h6.396a.5.5 0 00.488-.392l1.69-7.608H2.624z" clip-rule="evenodd"/>
+                </svg>
+                Manage (<%= @bucket_count %>)
               <% end %>
             </li>
           </ul>
         </div>
       </nav>
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div class="container-fluid pb-3">
+        <div class="container-fluid pb-3 position-relative">
+          <% if @notice != nil %>
+            <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+              <div class="toast position-absolute" style="top: 0; right: 0;z-index:99999;">
+                <div class="toast-header">
+                  <svg class="bi bi-info-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                  </svg>
+                  <strong class="mr-auto"></strong>
+                  <small></small>
+                  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="toast-body"><%= @notice %></div>
+              </div>
+            </div>
+          <% end %>
           <div class="row">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-6">
               <h1 class="h2"></h1>
@@ -93,9 +118,6 @@
             </div>
           </div>
         </div>
-        <% if @notice != nil %>
-          <div class="alert alert-info" role="alert"><%= @notice %></div>
-        <% end %>
         <div class="table-responsive">
           <% @buckets.each do |bucket|%>
             <span class="badge badge-success float-right p-1">Total: $<%= bucket[:total] %></span>
